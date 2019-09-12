@@ -1,0 +1,71 @@
+
+
+
+
+Events:
+  OperationalEvents: # Message flow and Resource statistics plus Workload management
+    MQ:
+      #policy: ''      # Specify a {policy project}:policy if not using  'defaultQueueManager'
+      #enabled: false  # Set true or false, default false
+      #format: ''      # Set string or none
+    MQTT:
+      #policy: ''      # Specify a {policy project}:policy
+      #enabled: false  # Set true or false, default false
+      #format: ''      # Set string or none
+  BusinessEvents: # Business monitoring events
+    MQ:
+      #policy: ''      # Specify a {policy project}:policy if not using  'defaultQueueManager'
+      enabled: true    # Set true or false, default false
+      #format: ''      # Set string or none
+    MQTT:
+      #policy: ''      # Specify a {policy project}:policy
+      #enabled: false  # Set true or false, default false
+      #format: ''      # Set string or none
+
+Monitoring:
+  MessageFlow:
+    publicationOn: 'active'         # choose 1 of : active|inactive, default inactive
+                                       # Ensure Events.BusinessEvents.MQ|MQTT is set
+    eventFormat: 'MonitoringEventV2'  # choose 1 of : MonitoringEventV2|WMB
+
+
+# Record and Replay requires a default queue manager to be associated with the integration server.
+RecordReplay:
+  recordReplayEnabled: true           # Set to true to enable all Record and Replay functionality. Default is true.
+  Stores:
+    # Copy and customize the StoreTemplate section for each Record and Replay store that you want to create.
+    # Rename the section title 'StoreTemplate' to be the name of your Record and Replay store. This name must be unique.
+    MBRECORD_store:
+      dataSource: 'MBRECORD'            # The ODBC data source name (DSN) that is used to connect to the database that stores the recorded data. This property is mandatory and has no default value.
+      schema: 'WMB'                     # The schema name that owns the database tables that are used for storing recorded data. This property has no default value. If no value is set, either the default database schema is used (if there is one), or no schema is used, depending on the database.
+      storeMode: 'all'                  # The mode for the store to operate in. Valid values are record, view, and all. Default is all.
+      queue: 'SYSTEM.BROKER.DC.RECORD'  # The name of the queue to which event messages will be published before being recorded to the database. The queue must exist.
+                                         # Default is SYSTEM.BROKER.DC.RECORD. The queue SYSTEM.BROKER.DC.RECORD must be created manually if you use Record and Replay. The same queue can be specified for multiple Record and Replay stores.
+                                         # Change the value of this property to distribute the data from multiple sources across multiple queues.
+      backoutQueue: 'SYSTEM.BROKER.DC.BACKOUT'  # The name of the backout queue used by the recorder. Messages that cannot be processed (for example, because the specified database does not exist) are sent to this queue.
+                                                 # Default is SYSTEM.BROKER.DC.BACKOUT. The queue SYSTEM.BROKER.DC.BACKOUT must be created manually if you use Record and Replay. If a data capture source refers to this data capture store, and no backoutQueue has been specified, an error occurs. The same backoutQueue can be specified for multiple Record and Replay stores.
+      useCoordinatedTransaction: false  # Specifies whether recorder transactions are globally coordinated across IBM MQ and database resources. Default is false.
+      commitCount: 10                   # The number of input messages that are processed on a recorder thread before a sync point is taken. Default is 10.
+      threadPoolSize: 10                # The number of threads that are used by the recorder to process the monitoring topic subscriptions. Default is 10.
+      commitIntervalSecs: 5             # The time interval (in seconds) at which a commit is taken, if the commitCount property is greater than 1 but the number of messages processed has not reached the value of the commitCount property. Default is 5.
+
+  Sources:
+    # Copy and customize the SourceTemplate section for each Record and Replay source that you want to create.
+    # Rename the section title 'SourceTemplate' to be the name of your Record and Replay source. This name must be unique.
+    # If you are publishing MonitoringEventV2 format monitoring events, the value of the topic property takes the form: $SYS/Broker/integrationNodeName/Monitoring/integrationServer/application/library/msgFlow ,where integrationNodeName, integrationServer, application, library, and msgFlow represent the names of your integration node, integration server, application, library, and message flow. The library name is optional and will be required only if the message flow is inside a library.
+    # If you are publishing WMB format monitoring events, the value of the topic property takes the form: $SYS/Broker/integrationNodeName/Monitoring/integrationServer/msgFlow, where integrationNodeName, integrationServer, and msgFlow represent the names of your integration node, integration server, and message flow.
+    # You can use wildcards in the topic string; for more information about using wildcards in topics, see "Special characters in topics" topic in the Knowledge Center.
+    # A durable subscription is created for each source and is created with a subid of IntegrationServer:[servername]:[sourcename]. If multiple independent integration servers share the same queue manager, you must ensure that there is no clash in server and source name.
+    # If you delete a source, you must manually delete the durable subscription for that source to avoid messages being published to the Record and Replay store's queue.
+    MBRECORD_source:
+      #topic: '$SYS/Broker/[nodename]/Monitoring/[servername]/[applicationname]/[flowname]'  # Sets the subscription topic that is used for business-level monitoring of a message flow.
+      topic: '$SYS/Broker/integration_server/Monitoring/FEMServer/IOBKApplication/SimpleRecAndRepFlow'  # Sets the subscription topic that is used for business-level monitoring of a message flow.      
+      store: 'MBRECORD_store' # The Record and Replay store that is used to configure record and replay for the message flows specified in the topic property. Multiple instances of Record and Replay source can refer to one instance of a Record and Replay store.
+
+  Destinations:
+    # Copy and customize the MQDestinationTemplate section for each Record and Replay destination that you want to create.
+    # Rename the section title 'MQDestinationTemplate' to be the name of your Record and Replay destination. This name must be unique.
+    # For destinations of type WMQDestination, the value of the property takes the form: wmq:/msg/queue/queueName@queueManagerName, where queueName identifies the destination queue and queueManagerName identifies the queue manager that owns the queue. The queue manager specified by this property must be local; data cannot be replayed to a queue that is on a remote queue manager.
+    MQDestinationTemplate:
+      endpointType: 'WMQDestination'             # The type of the target destination to which messages will be replayed. The default is WMQDestination, which is the only valid value.
+      endpoint: 'wmq:/msg/queue/FEM.REPLAY.Q@FEMQM'  # The destination to which you want to replay data. This property is mandatory. The default value is wmq:/msg/queue/[QUEUE]@[QMGR]. You must replace [QUEUE] and [QMGR] with the names of your queue and queue manager.

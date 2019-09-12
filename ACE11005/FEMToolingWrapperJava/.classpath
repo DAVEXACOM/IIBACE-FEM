@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="con" path="com.ibm.etools.mft.uri.classpath.MBProjectReference"/>
+	<classpathentry kind="lib" path="C:/Program Files/ibm/ACE/11.0.0.5/common/classes/IntegrationAPI.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

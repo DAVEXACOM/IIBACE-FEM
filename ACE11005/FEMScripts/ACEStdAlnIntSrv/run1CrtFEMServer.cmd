@@ -1,0 +1,1 @@
+IntegrationServer --work-dir C:\FEMServer --name FEMServer --admin-rest-api 7100 --http-port-number 7200 --mq-queue-manager-name FEMQM --console-log

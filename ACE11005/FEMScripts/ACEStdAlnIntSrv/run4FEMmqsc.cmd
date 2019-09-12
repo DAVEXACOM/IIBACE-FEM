@@ -1,0 +1,1 @@
+runmqsc FEMQM < FEM.mqsc

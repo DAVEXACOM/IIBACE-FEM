@@ -1,0 +1,1 @@
+mqsicvp -n MBRECORD -u dda -p password
