@@ -1,1 +1,1 @@
-mqsisetdbparms -w C:\FEMServer -n dataSourceName -u dda -p password
+mqsisetdbparms -w C:\FEMServer -n MBRECORD -u dda -p password

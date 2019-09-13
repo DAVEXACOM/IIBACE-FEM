@@ -848,6 +848,46 @@ DEFINE QLOCAL ('SYSTEM.BROKER.DC.RECORD') +
        CLUSNL(' ') +
        DEFBIND(OPEN) +
        REPLACE
+DEFINE QLOCAL ('SYSTEM.BROKER.DC.BACKOUT') +
+* CRDATE (2014-11-28) + 
+* CRTIME (13.52.17) + 
+* ALTDATE (2014-11-28) + 
+* ALTTIME (13.52.17) + 
+       DESCR(' ') +
+       PUT(ENABLED) +
+       DEFPRTY(0) +
+       DEFPSIST(NO) +
+       SCOPE(QMGR) +
+       GET(ENABLED) +
+       MAXDEPTH(5000) +
+       MAXMSGL(4194304) +
+       SHARE +
+       DEFSOPT(SHARED) +
+       MSGDLVSQ(PRIORITY) +
+       HARDENBO +
+       USAGE(NORMAL) +
+       NOTRIGGER +
+       TRIGTYPE(FIRST) +
+       TRIGDPTH(1) +
+       TRIGMPRI(0) +
+       TRIGDATA(' ') +
+       PROCESS(' ') +
+       INITQ(' ') +
+       RETINTVL(999999999) +
+       BOTHRESH(0) +
+       BOQNAME(' ') +
+       QDEPTHHI(80) +
+       QDEPTHLO(20) +
+       QDPMAXEV(ENABLED) +
+       QDPHIEV(DISABLED) +
+       QDPLOEV(DISABLED) +
+       QSVCINT(999999999) +
+       QSVCIEV(NONE) +
+       DISTL(NO) +
+       CLUSTER(' ') +
+       CLUSNL(' ') +
+       DEFBIND(OPEN) +
+       REPLACE
 DEFINE QLOCAL ('FEM.SIMPLE.REPLAY.Q') +
 * CRDATE (2014-11-28) + 
 * CRTIME (13.52.17) + 
@@ -1008,7 +1048,7 @@ DEFINE QLOCAL ('FEM.SIMPLE.DOWNSTREAM.FEED.Q') +
        CLUSNL(' ') +
        DEFBIND(OPEN) +
        REPLACE
-DEFINE QLOCAL ('FFEM.SIMPLE.GENERIC.ERROR.Q') +
+DEFINE QLOCAL ('FEM.SIMPLE.GENERIC.ERROR.Q') +
 * CRDATE (2014-11-28) + 
 * CRTIME (11.08.17) + 
 * ALTDATE (2014-11-28) + 
